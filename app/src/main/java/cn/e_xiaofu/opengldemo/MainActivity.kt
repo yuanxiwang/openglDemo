@@ -7,36 +7,34 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
 class MainActivity : AppCompatActivity() {
-    private val glSurfaceView: GLSurfaceView
-        get() {
-            return GLSurfaceView(this)
-        }
+    private var glSurfaceView: GLSurfaceView? = null
     private var renderSet: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        glSurfaceView = GLSurfaceView(this)
         val judgeSupportGl20 = judgeSupportGl20()
+        setContentView(glSurfaceView)
         if (judgeSupportGl20) {
-            glSurfaceView.setEGLContextClientVersion(2)
-            glSurfaceView.setRenderer(SimpleRenderer(this))
+            glSurfaceView?.setEGLContextClientVersion(2)
+            glSurfaceView?.setRenderer(SimpleRenderer(this))
         } else {
             println("不支持openGL20")
             return
         }
-        setContentView(glSurfaceView)
     }
 
     override fun onResume() {
         super.onResume()
         if (renderSet) {
-            glSurfaceView.onResume()
+            glSurfaceView?.onResume()
         }
     }
 
     override fun onPause() {
         super.onPause()
         if (renderSet){
-            glSurfaceView.onPause()
+            glSurfaceView?.onPause()
         }
     }
 

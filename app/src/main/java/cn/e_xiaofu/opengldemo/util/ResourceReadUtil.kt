@@ -18,11 +18,11 @@ object ResourceReadUtil {
         val stringBuilder = StringBuilder()
         try {
             val inputStream = context.resources.openRawResource(res)
-            val inputStreamReader = InputStreamReader(inputStream)
-            val bufferedReader = BufferedReader(inputStreamReader)
-            var nextLine = ""
-            while (bufferedReader.readLine().also { nextLine = it } != null) {
-                stringBuilder.append(nextLine)
+            val streamReader = InputStreamReader(inputStream)
+            val bufferedReader = BufferedReader(streamReader)
+            var textLine: String?
+            while (bufferedReader.readLine().also { textLine = it } != null) {
+                stringBuilder.append(textLine)
                     .append("\n")
             }
         } catch (e: IOException) {
