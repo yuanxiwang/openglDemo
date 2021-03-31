@@ -4,6 +4,7 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import cn.e_xiaofu.opengldemo.util.MatrixHelper
 import cn.e_xiaofu.opengldemo.util.ResourceReadUtil
 import cn.e_xiaofu.opengldemo.util.ShaderHelper
 import java.nio.ByteBuffer
@@ -116,15 +117,16 @@ class SimpleRenderer : GLSurfaceView.Renderer {
         //set the opengl viewport to fill the entire surface
         GLES20.glViewport(0, 0, width, height)
 
-        val aspectRatio =
-            if (width > height) width.toFloat() / height.toFloat() else height.toFloat() / width.toFloat()
-        if (width > height) {
-            //landscape
-            Matrix.orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f)
-        } else {
-            //portrait or square
-            Matrix.orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f)
-        }
+//        val aspectRatio =
+//            if (width > height) width.toFloat() / height.toFloat() else height.toFloat() / width.toFloat()
+//        if (width > height) {
+//            //landscape
+//            Matrix.orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f)
+//        } else {
+//            //portrait or square
+//            Matrix.orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f)
+//        }
+        MatrixHelper.perspectiveM(projectionMatrix, 45f, (width / height).toFloat(), 1f, 10f)
     }
 
     override fun onDrawFrame(gl: GL10?) {
