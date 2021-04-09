@@ -19,7 +19,7 @@ import javax.microedition.khronos.opengles.GL10
  */
 class SimpleRenderer : GLSurfaceView.Renderer {
     private var context: Context?
-    val POSITION_COMPONENT_COUNT = 2
+    val POSITION_COMPONENT_COUNT = 4
     val COLOR_COMPONENT_COUNT = 3
     val BYTE_PER_FLOAT = 4
     private var vertexData: FloatBuffer?
@@ -33,18 +33,18 @@ class SimpleRenderer : GLSurfaceView.Renderer {
     private var tableVerticesWithTriangle = floatArrayOf(
         //前两个是坐标,后三个是颜色RGB
         // triangle fan
-         0.0f,  0.0f, 1.0f, 1.0f, 1.0f,
-        -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
-         0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
-         0.5f,  0.8f, 0.7f, 0.7f, 0.7f,
-        -0.5f,  0.8f, 0.7f, 0.7f, 0.7f,
-        -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
-        // line 1
-        -0.5f,  0.0f, 1.0f, 0.0f, 0.0f,
-         0.5f,  0.0f, 1.0f, 0.0f, 0.0f,
-        //mallets
-         0.0f, -0.25f, 1.0f, 0.0f, 0.0f,
-         0.0f,  0.25f, 0.0f, 0.0f, 1.0f
+         0.0f,  0.0f, 0.0f, 1.5f, 1.0f, 1.0f, 1.0f,
+        -0.5f, -0.8f, 0.0f, 1.0f, 0.7f, 0.7f, 0.7f,
+         0.5f, -0.8f, 0.0f, 1.0f, 0.7f, 0.7f, 0.7f,
+         0.5f,  0.8f, 0.0f, 2.0f, 0.7f, 0.7f, 0.7f,
+        -0.5f,  0.8f, 0.0f, 2.0f, 0.7f, 0.7f, 0.7f,
+        -0.5f, -0.8f, 0.0f, 1.0f, 0.7f, 0.7f, 0.7f,
+        // line 10.0f,
+        -0.5f,  0.0f, 0.0f, 1.5f, 1.0f, 0.0f, 0.0f,
+         0.5f,  0.0f, 0.0f, 1.5f, 1.0f, 0.0f, 0.0f,
+        //mallets0.0f,
+        0.0f, -0.25f, 0.0f, 1.25f, 1.0f, 0.0f, 0.0f,
+        0.0f,  0.25f, 0.0f, 1.75f, 0.0f, 0.0f, 1.0f
     )
     private val A_COLOR = "a_Color"
     private var aColorLocation: Int = 0
@@ -54,6 +54,7 @@ class SimpleRenderer : GLSurfaceView.Renderer {
     private var uMatrixLocation: Int = 0
     private var projectionMatrix = FloatArray(16)
     private val STRIDE = (POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) * BYTE_PER_FLOAT
+    private val modelMatrix = FloatArray(16)
 
     constructor(context: Context) {
         this.context = context
@@ -126,7 +127,17 @@ class SimpleRenderer : GLSurfaceView.Renderer {
 //            //portrait or square
 //            Matrix.orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f)
 //        }
-        MatrixHelper.perspectiveM(projectionMatrix, 45f, (width / height).toFloat(), 1f, 10f)
+        MatrixHelper.perspectiveM(projectionMatrix, 45f, width.toFloat() / height.toFloat(), 1f, 10f)
+        //设置获取单位阵
+        Matrix.setIdentityM(modelMatrix, 0)
+        //平移沿Z轴矩阵
+        Matrix.translateM(modelMatrix, 0, 0f, 0f, -2f)
+        val temp = FloatArray(16)
+        //两个矩阵相乘 projectionMatrix * modelMatrix
+        Matrix.multiplyMM(temp, 0, projectionMatrix, 0, modelMatrix, 0)
+        //将temp的数据复制到 projectionMatrix 中
+        System.arraycopy(temp, 0, projectionMatrix, 0, temp.size)
+
     }
 
     override fun onDrawFrame(gl: GL10?) {

@@ -9,7 +9,7 @@ import kotlin.math.tan
 object MatrixHelper {
     fun perspectiveM(m: FloatArray, yFovInDegrees: Float, aspect: Float, n: Float, f: Float) {
         //计算焦距
-        val angleInRadians = yFovInDegrees * Math.PI / 180
+        val angleInRadians = yFovInDegrees * Math.PI / 180.0
         val a = 1.0 / tan(angleInRadians / 2.0)
 
         //输出矩阵
